@@ -14,3 +14,7 @@ int main(void)
     //free allocated blocks here -- not required for the project, but good practice
     return 0;
 }
+
+// search through terms sorted in alphabetical order (binary search)
+// resort things by weight (# of appearances or by population)
+// output things in order by weight
