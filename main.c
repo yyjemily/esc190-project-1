@@ -15,6 +15,22 @@ int main(void)
     return 0;
 }
 
+void read_in_terms(term **terms, int *pnterms, char *filename) {
+    //
+}
+
+int lowest_match(term *terms, int nterms, char *substr) {
+    //
+}
+
+int highest_match(struct term *terms, int nterms, char *substr) {
+    //
+}
+
+void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *substr) {
+    //
+}
+
 // search through terms sorted in alphabetical order (binary search)
 // resort things by weight (# of appearances or by population)
 // output things in order by weight
