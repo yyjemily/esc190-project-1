@@ -1,5 +1,7 @@
 #include "autocomplete.h"
 #include <stdbool.h>
+#include <stdio.h>
+
 
 int main(void)
 {
@@ -37,19 +39,20 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
     // sorting by lex algo:
 
     int sorted = 0 // false
-    char *temp;
+    // char *temp;
+    
+    qsort(*terms, *pnterms, sizeof(term), comp);
 
-    while (sorted == 0) {
-        sorted = 1;
-        for (int i = 0; i < pnterms - 1; i++) {
-            if (*(terms + i) > *(terms + i + 1)) {
-                sorted = 0;
-                // sorting algo -> use q sort + comparator function
-                // int n = sizeof(arr) / sizeof(arr[0]);
-                qsort(arr, n, sizeof(const char *), comp);
-            }
-        }
-    }
+    // while (sorted == 0) {
+    //     sorted = 1;
+    //     for (int i = 0; i < pnterms - 1; i++) {
+    //         if (*(terms + i) > *(terms + i + 1)) {
+    //             sorted = 0;
+    //             // sorting algo -> use q sort + comparator function
+    //             qsort(*terms, *pnterms, sizeof(term), comp);
+    //         }
+    //     }
+    // }
 
     fclose(fp);
 
