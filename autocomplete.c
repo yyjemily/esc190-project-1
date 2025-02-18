@@ -38,7 +38,7 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
 
     // sorting by lex algo:
 
-    int sorted = 0 // false
+    // int sorted = 0 // false
     // char *temp;
     
     qsort(*terms, *pnterms, sizeof(term), comp);
