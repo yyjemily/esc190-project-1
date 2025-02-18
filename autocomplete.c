@@ -23,8 +23,8 @@ int main(void)
 // Zero (0): If both arguments are equal.
 // Greater than zero (>0): If the first argument should be placed after the second argument.
 
-int comp(const void *a, const void *b) {
-    return strcmp(*(const char **)a, *(const char **)b);
+int comp(term *a, term *b) {
+    return strcmp(a->term, b->term);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
@@ -130,9 +130,26 @@ int highest_match(struct term *terms, int nterms, char *substr) {
     // binary search
 }
 
+int compweights(term *a, term *b) {
+    return a->weight - b->weight;    
+}
+
 void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *substr) {
     // cry because using qsort is gonna make us cry
     // extract terms that match query string
     // sort by weight -> qsort (# of appearances or by population)
     // extract top matching terms by weight / output things in order by weight
+
+    int lowest = lowest_match(terms, nterms, substr);
+    int highest = highest_match(terms, nterms, substr);
+
+    int n_answer = highest - lowest + 1;
+
+    term *answer = (term *)malloc(sizeof(term) * n_answer);
+
+    for (int i = lowest; i <= highest; i++) {
+        answer[i - lowest] = terms[i];
+    }
+
+    qsort(answer, n_answer, sizeof(term), comp);
 }
