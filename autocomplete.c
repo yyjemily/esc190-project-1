@@ -128,6 +128,20 @@ int lowest_match(term *terms, int nterms, char *substr) {
 
 int highest_match(struct term *terms, int nterms, char *substr) {
     // binary search
+    int low = 0;
+    int high = nterms - 1;
+    while (low <= high) {
+        mid = (high - low) / 2 + low;
+        if (comp(terms[low], substr) < 0) {
+            low = mid + 1;
+        } else if (comp(terms[mid], substr) == 0) {
+            return mid;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    return -1; // term doesnt exist in terms
 }
 
 int compweights(term *a, term *b) {
