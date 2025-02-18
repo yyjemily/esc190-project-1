@@ -16,34 +16,73 @@ int main(void)
     return 0;
 }
 
-void read_in_terms(term *terms, int *pnterms, char filename) {
-    termterms = (term *)malloc(sizeof(term) (pnterms));
+// The comparator function should only return the following values:
+// Less than zero (<0): If the first argument should be placed before the second argument.
+// Zero (0): If both arguments are equal.
+// Greater than zero (>0): If the first argument should be placed after the second argument.
 
-    FILE fp = fopen(filename, "r");
+int comp(const void *a, const void *b) {
+    return strcmp(*(const char **)a, *(const char **)b);
+}
+
+void read_in_terms(term **terms, int *pnterms, char *filename) {
+    term *terms = (term *)malloc(sizeof(term) * (pnterms));
+
+    FILE *fp = fopen(filename, "r");
 
     for (int i = 0; i < pnterms; i++) {
-        fgets((terms + i), 200, fp);
+        fgets(*(terms + i), 200, fp);
     }
 
     // sorting by lex algo:
 
     int sorted = 0 // false
-    char temp;
+    char *temp;
 
     while (sorted == 0) {
         sorted = 1;
         for (int i = 0; i < pnterms - 1; i++) {
-            if ((terms + i) > (terms + i + 1)) {
+            if (*(terms + i) > *(terms + i + 1)) {
                 sorted = 0;
-                temp =(terms + i);
-                (terms + i) =(terms + i + 1);
-                *(terms + i + 1) = temp;
+                // sorting algo -> use q sort + comparator function
+                // int n = sizeof(arr) / sizeof(arr[0]);
+                qsort(arr, n, sizeof(const char *), comp);
             }
         }
     }
 
     fclose(fp);
+
+    // sort 
+
+    // The function reads in all the terms from filename,
+    // and places them in the block pointed to by *terms.
+    // The terms should be sorted in lexicographic order
+
+    // fgets(myString, 200, fptr);
+
+    // term t1 = {term, weight};
+    // term *p_t1 = &t1;
+    // term terms[500];
+    // term *terms_block = (term *)malloc(sizeof(term)*500)
+
+    // recall
+        // typedef struct term{
+        //     char term[200]; // assume terms are not longer than 200
+        //     double weight;
+        // } term;
+
+    // read in entire file of terms
+    // term *terms = (term *)malloc(sizeof(term) * (pnterms));
+    // for(int i = 0; i < pnterms; i++) {
+    //     terms[i].name = (char *)malloc(2000 * sizeof(term));
+    // }
+
+    // read in terms from file based on lab exercises
+
+    // to sort alphabetically, "sorted in c"? qsort...? inspired by internet
 }
+
 int lowest_match(term *terms, int nterms, char *substr) {
     // binary search
 
