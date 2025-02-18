@@ -16,7 +16,10 @@ int main(void)
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
-    //
+    term *terms = (term *)malloc(sizeof(term) * (pnterms));
+    for(int i = 0; i < pnterms; i++) {
+        terms[i].name = (char *)malloc(2000 * sizeof(term));
+    }
 }
 
 int lowest_match(term *terms, int nterms, char *substr) {
