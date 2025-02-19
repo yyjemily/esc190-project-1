@@ -6,15 +6,16 @@
 
 int main(void)
 {
-    struct term *terms;
-    int nterms;
-    read_in_terms(&terms, &nterms, "cities.txt");
-    lowest_match(terms, nterms, "Tor");
-    highest_match(terms, nterms, "Tor");
+    struct term terms = {"Tooor", 12020};
+    int nterms = 10;
+    // read_in_terms(&terms, &nterms, "cities.txt");
+    // lowest_match(terms, nterms, "Tor");
+    struct term *termss = &terms;
+    highest_match(termss, nterms, "Tor");
     
-    struct term *answer;
-    int n_answer;
-    autocomplete(&answer, &n_answer, terms, nterms, "Tor");
+    // struct term *answer;
+    // int n_answer;
+    // autocomplete(&answer, &n_answer, terms, nterms, "Tor");
     //free allocated blocks here -- not required for the project, but good practice
     return 0;
 }
@@ -24,8 +25,10 @@ int main(void)
 // Zero (0): If both arguments are equal.
 // Greater than zero (>0): If the first argument should be placed after the second argument.
 
-int comp(term *a, term *b) {
-    return strcmp(a->term, b->term);
+int comp(const void *a, const void *b) {
+    term *term_a = (term *)a;
+    term *term_b = (term *)b;
+    return strcmp(term_a->term, term_b->term);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
@@ -34,7 +37,7 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
     FILE *fp = fopen(filename, "r");
 
     for (int i = 0; i < *pnterms; i++) {
-        fgets(*(terms + i), 200, fp);
+        fgets((*terms + i)->term, 200, fp);
     }
 
     // sorting by lex algo:
@@ -42,7 +45,7 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
     // int sorted = 0 // false
     // char *temp;
     
-    qsort(*terms, *pnterms, sizeof(term), *comp);
+    qsort(*terms, *pnterms, sizeof(term), comp);
 
     fclose(fp);
 }
@@ -63,7 +66,7 @@ int lowest_match(term *terms, int nterms, char *substr) {
         }
         if (comp(terms[low].term, substr) < 0) {
             high = mid - 1;
-        } else if (com(terms[low].term, substr) > 0) {
+        } else if (comp(terms[low].term, substr) > 0) {
             low = mid + 1; 
         }
 
@@ -77,8 +80,10 @@ int highest_match(struct term *terms, int nterms, char *substr) {
     int low = 0;
     int high = nterms - 1;
     int mid; 
+
     while (low <= high) {
-        mid = (high - low) / 2 + low;
+        printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
+        mid = low + (high - low) /2; 
         if (comp(terms[low].term, substr) < 0) {
             low = mid + 1;
         } else if (comp(terms[mid].term, substr) == 0) {
@@ -91,8 +96,10 @@ int highest_match(struct term *terms, int nterms, char *substr) {
     return -1; // term doesnt exist in terms
 }
 
-int compweights(term *a, term *b) {
-    return a->weight - b->weight;    
+int compweights(const void *a, const void *b) {
+    term *term_a = (term *)a;
+    term *term_b = (term *)b;
+    return term_a->weight - term_b->weight;    
 }
 
 void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *substr) {
@@ -104,13 +111,15 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
     int lowest = lowest_match(terms, nterms, substr);
     int highest = highest_match(terms, nterms, substr);
 
-    int n_answer = highest - lowest + 1;
+    int na_answer = highest - lowest + 1;
 
     *answer = (term *)malloc(sizeof(term) * (*n_answer));
 
     for (int i = lowest; i <= highest; i++) {
-        answer[i - lowest] = terms[i].term;
+        (*answer)[i - lowest] = terms[i];
     }
 
-    qsort(answer, n_answer, sizeof(term), compweights);
+    qsort(answer, na_answer, sizeof(term), compweights);
+    
+
 }
