@@ -1,7 +1,8 @@
 #include "autocomplete.h"
 #include <stdbool.h>
 #include <stdio.h>
-
+#include <string.h>
+#include <stdlib.h>
 
 int main(void)
 {
@@ -110,7 +111,6 @@ int lowest_match(term *terms, int nterms, char *substr) {
 
     }
     return -1; //term does not exist 
-
     
 }
 
