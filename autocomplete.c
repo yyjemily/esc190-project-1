@@ -28,7 +28,7 @@ int comp(term *a, term *b) {
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
-    term *terms = (term *)malloc(sizeof(term) * (pnterms));
+    term *terms = (term *)malloc(sizeof(term) * (*pnterms));
 
     FILE *fp = fopen(filename, "r");
 
@@ -92,37 +92,25 @@ int lowest_match(term *terms, int nterms, char *substr) {
     // lowest match of the index in terms of the first term in lexicographic ordering that matches the string substr 
     // while((str[i] >= '0' && str[i] <= '9') || str[i] == '.' ){
     //check if the first 
-    int left = 0; 
-    int right = nterms-1; 
-    int mid = (left + right)/2;
+    int low = 0; 
+    int high = nterms-1; 
 
-    int i = 0; //indexs through substr 
-
-    do {
-        mid = (left + right)/2;
-        bool term_match = true; 
-        //if first letter matches 
-        if (terms[mid].term == substr[i]){
-            //while substr not at null and the
-            while((substr[i] != '/0')){
-                if ((terms[mid].term) + 1 == substr[i]){
-                                        
-                }
-                i ++;
-            }
-
+    while(low <= high) {
+        int mid = low + (high - low) /2; 
+        //compare terms to see if they are equal
+        //check if in the middle 
+        if (comp(terms[low].term, substr) == 0 ) {
+            return mid; 
+        }
+        if (comp(terms[low].term, substr) < 0) {
+            high = mid - 1;
+        } else if (com(terms[low].term, substr) > 0) {
+            low = mid + 1; 
         }
 
-    }while(left <= right);
-
-    
-    while((substr[i] != '/0')){ 
-
-
     }
+    return -1; //term does not exist 
 
-    
-    
     
 }
 
@@ -130,11 +118,12 @@ int highest_match(struct term *terms, int nterms, char *substr) {
     // binary search
     int low = 0;
     int high = nterms - 1;
+    int mid; 
     while (low <= high) {
         mid = (high - low) / 2 + low;
-        if (comp(terms[low], substr) < 0) {
+        if (comp(terms[low].term, substr) < 0) {
             low = mid + 1;
-        } else if (comp(terms[mid], substr) == 0) {
+        } else if (comp(terms[mid].term, substr) == 0) {
             return mid;
         } else {
             high = mid - 1;
@@ -159,10 +148,10 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
 
     int n_answer = highest - lowest + 1;
 
-    term *answer = (term *)malloc(sizeof(term) * n_answer);
+    *answer = (term *)malloc(sizeof(term) * (*n_answer));
 
     for (int i = lowest; i <= highest; i++) {
-        answer[i - lowest] = terms[i];
+        answer[i - lowest] = terms[i].term;
     }
 
     qsort(answer, n_answer, sizeof(term), comp);
