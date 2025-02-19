@@ -29,11 +29,11 @@ int comp(term *a, term *b) {
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
-    term *terms = (term *)malloc(sizeof(term) * (*pnterms));
+    *terms = (term *)malloc(sizeof(term) * (*pnterms));
 
     FILE *fp = fopen(filename, "r");
 
-    for (int i = 0; i < pnterms; i++) {
+    for (int i = 0; i < *pnterms; i++) {
         fgets(*(terms + i), 200, fp);
     }
 
@@ -42,57 +42,15 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
     // int sorted = 0 // false
     // char *temp;
     
-    qsort(*terms, *pnterms, sizeof(term), comp);
-
-    // while (sorted == 0) {
-    //     sorted = 1;
-    //     for (int i = 0; i < pnterms - 1; i++) {
-    //         if (*(terms + i) > *(terms + i + 1)) {
-    //             sorted = 0;
-    //             // sorting algo -> use q sort + comparator function
-    //             qsort(*terms, *pnterms, sizeof(term), comp);
-    //         }
-    //     }
-    // }
+    qsort(*terms, *pnterms, sizeof(term), *comp);
 
     fclose(fp);
-
-    // sort 
-
-    // The function reads in all the terms from filename,
-    // and places them in the block pointed to by *terms.
-    // The terms should be sorted in lexicographic order
-
-    // fgets(myString, 200, fptr);
-
-    // term t1 = {term, weight};
-    // term *p_t1 = &t1;
-    // term terms[500];
-    // term *terms_block = (term *)malloc(sizeof(term)*500)
-
-    // recall
-        // typedef struct term{
-        //     char term[200]; // assume terms are not longer than 200
-        //     double weight;
-        // } term;
-
-    // read in entire file of terms
-    // term *terms = (term *)malloc(sizeof(term) * (pnterms));
-    // for(int i = 0; i < pnterms; i++) {
-    //     terms[i].name = (char *)malloc(2000 * sizeof(term));
-    // }
-
-    // read in terms from file based on lab exercises
-
-    // to sort alphabetically, "sorted in c"? qsort...? inspired by internet
 }
 
 int lowest_match(term *terms, int nterms, char *substr) {
     // binary search
 
     // lowest match of the index in terms of the first term in lexicographic ordering that matches the string substr 
-    // while((str[i] >= '0' && str[i] <= '9') || str[i] == '.' ){
-    //check if the first 
     int low = 0; 
     int high = nterms-1; 
 
@@ -154,5 +112,5 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
         answer[i - lowest] = terms[i].term;
     }
 
-    qsort(answer, n_answer, sizeof(term), comp);
+    qsort(answer, n_answer, sizeof(term), compweights);
 }
