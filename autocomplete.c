@@ -25,10 +25,10 @@ int main(void)
 // Zero (0): If both arguments are equal.
 // Greater than zero (>0): If the first argument should be placed after the second argument.
 
-int comp(const void *a, const void *b) {
+int comp(const void *a, const void *b, int len_substr) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return strcmp(term_a->term, term_b->term);
+    return strcmp(term_a->term, term_b->term, len_substr);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
@@ -75,25 +75,27 @@ int lowest_match(term *terms, int nterms, char *substr) {
     
 }
 
+// FIXEDDD (?)
 int highest_match(struct term *terms, int nterms, char *substr) {
     // binary search
     int low = 0;
     int high = nterms - 1;
     int mid; 
 
+    int len_substr = length(substr);
+
     while (low <= high) {
-        printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
-        mid = low + (high - low) /2; 
-        if (comp(terms[low].term, substr) < 0) {
-            low = mid + 1;
-        } else if (comp(terms[mid].term, substr) == 0) {
-            return mid;
-        } else {
+        // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
+        mid = (low + high) /2; 
+        val = (terms)[mid].term, substr, len_substr;
+        if (val > 0) {
             high = mid - 1;
+        } else if (val <= 0) {
+            low = mid + 1;
         }
     }
 
-    return -1; // term doesnt exist in terms
+    return high;
 }
 
 int compweights(const void *a, const void *b) {
