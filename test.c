@@ -6,6 +6,7 @@
 
 
 int comp(const void *a, const void *b) {
+    //cast type to term
     term *term_a = (term *)a;
     term *term_b = (term *)b;
     return strcmp(term_a->term, term_b->term);
@@ -25,16 +26,24 @@ int lowest_match(term *terms, int nterms, char *substr) {
     int low = 0; 
     int high = nterms-1; 
 
+    printf("low %d high %d\n", low, high);
     while(low <= high) {
         int mid = low + (high - low) /2; 
+        printf("mid %d\n", mid);
         //compare terms to see if they are equal
         //check if in the middle 
-        if (comp(terms[low].term, substr) == 0 ) {
-            return mid; 
-        }
-        if (comp(terms[low].term, substr) < 0) {
+        printf("%s %s\n", terms[mid].term, substr);
+        printf("%d comp\n", comp(terms[mid].term, substr));
+
+        // if (comp(terms[mid].term, substr) == 0 ) {
+        //     return mid; 
+        // }
+        if (comp(terms[mid].term, substr) > 0) {
             high = mid - 1;
-        } else if (comp(terms[low].term, substr) > 0) {
+            if (strstr(terms[mid].term, substr) != NULL) {
+                return mid; 
+            } 
+        } else if (comp(terms[mid].term, substr) < 0) {
             low = mid + 1; 
         }
 
@@ -48,37 +57,31 @@ int main(void)
     // struct term *terms; //declare as struct to allocate memory
     // int nterms;
     // read_in_terms(&terms, &nterms, "cities.txt");
-    double weights[] = {14608512, 13076300, 12691836, 12294193, 11624219, 
-                         11174257, 10927986, 10444527, 10381222, 10356500, 
-                         10349312, 10021295, 9000000};
-    const char *cities[] = {
-        "Shanghai, China",
-        "Buenos Aires, Argentina",
-        "Mumbai, India",
-        "Mexico City, Distrito Federal, Mexico",
-        "Karachi, Pakistan",
-        "İstanbul, Turkey",
-        "Delhi, India",
-        "Manila, Philippines",
-        "Moscow, Russia",
-        "Dhaka, Bangladesh",
-        "Seoul, South Korea",
-        "São Paulo, Brazil",
-        "Lagos, Nigeria"
+
+    term terms[] = {
+        {"Shanghai, China", 14608512},
+        {"Buenos Aires, Argentina", 13076300},
+        {"Mumbai, India", 12691836},
+        {"Mexico City, Distrito Federal, Mexico", 12294193},
+        {"Karachi, Pakistan", 11624219},
+        {"İstanbul, Turkey", 11174257},
+        {"Delhi, India", 10927986},
+        {"Manila, Philippines", 10444527},
+        {"Moscow, Russia", 10381222},
+        {"Dhaka, Bangladesh", 10356500},
+        {"Seoul, South Korea", 10349312},
+        {"São Paulo, Brazil", 10021295},
+        {"Lagos, Nigeria", 9000000}
     };
 
     // Dynamically allocate memory for the terms array
-    term *terms = (term *)malloc(13 * sizeof(term));
-    term t[13];
-
-    for (int i = 0; i< 13; i++) {
-        strcpy(t[i].term, cities[i]);  // Copy city name to struct's term
-        t[i].weight = weights[i];      // Assign the weight to the struct's weight
-    }
+ 
     
-///////NOT WORKING EHREE???????//////
-    qsort(t, 13, sizeof(term), comp); //QSORT NOT WORKING FLK
-    printf("%d", lowest_match(t, 13, "Shan")); 
+    qsort(terms, 13, sizeof(term), comp); 
+    for (int i = 0; i< 13; i++) {
+        printf("City: %s, Population: %.0f\n", terms[i].term, terms[i].weight);
+    }
+    printf("%d", lowest_match(terms, 13, "Shan")); 
     
     //lowest_match(terms, nterms, "Tor");
     //highest_match(terms, nterms, "Tor");
