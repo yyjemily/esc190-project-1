@@ -46,12 +46,12 @@ int lowest_match(term *terms, int nterms, char *substr) {
         int mid = low + (high - low) /2; 
         //compare terms to see if they are equal
         //check if in the middle 
-        if (comp(terms[low].term, substr) == 0 ) {
+        if (comp(terms[low].term, substr, strlen(substr)) == 0 ) {
             return mid; 
         }
-        if (comp(terms[low].term, substr) < 0) {
+        if (comp(terms[low].term, substr, strlen(substr)) < 0) {
             high = mid - 1;
-        } else if (comp(terms[low].term, substr) > 0) {
+        } else if (comp(terms[low].term, substr, trlen(substr)) > 0) {
             low = mid + 1; 
         }
 
@@ -60,6 +60,7 @@ int lowest_match(term *terms, int nterms, char *substr) {
     
 }
 
+/*
 // FIXEDDD (?)
 int highest_match(struct term *terms, int nterms, char *substr) {
     // binary search
@@ -82,12 +83,13 @@ int highest_match(struct term *terms, int nterms, char *substr) {
 
     return high;
 }
-
+*/
 int compweights(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
     return term_a->weight - term_b->weight;    
 }
+
 
 void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *substr) {
     // cry because using qsort is gonna make us cry
@@ -109,20 +111,4 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
     qsort(answer, na_answer, sizeof(term), compweights);
     
 
-}
-
-int main(void)
-{
-    struct term *terms;
-    int nterms;
-    read_in_terms(&terms, &nterms, "cities.txt");
-    lowest_match(terms, nterms, "Tor");
-    highest_match(terms, nterms, "Tor");
-    
-    struct term *answer;
-    int n_answer;
-    autocomplete(&answer, &n_answer, terms, nterms, "Tor");
-    //free allocated blocks here -- not required for the project, but good practice
-    
-    return 0;
 }
