@@ -13,11 +13,10 @@
 int comp(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return strncmp(term_a->term, term_b->term, 200);
+    return strcmp(term_a->term, term_b->term);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
-    *terms = (struct term *)malloc(sizeof(struct term) * (*pnterms));
     char cur_line[200];
     
     FILE *fp = fopen(filename, "r");
@@ -25,12 +24,15 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
     fgets(cur_line, sizeof(cur_line), fp);
 
     *pnterms = atoi(cur_line); // converts string to int
+    *terms = (term *)malloc(sizeof(term) * (*pnterms));
+
     int j = 0;
 
     for (int i = 0; i < *pnterms; i++) {
+        j = 0;
         fgets(cur_line, sizeof(cur_line), fp);
         strcpy((*terms + i)->term, cur_line);
-        while ((isspace((*terms + i)->term[j])) != 0) { // use the isspace function from c library as a helper function here, included #include <ctype.h>
+        while ((isspace((*terms + i)->term[j]))) { // update: skip leading spaces // old comment: use the isspace function from c library as a helper function here, included #include <ctype.h>
             j++; // increment until you reach a space
         }
         
@@ -38,20 +40,24 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
         char term[200];
         int start = j;
 
-        while ((isspace((*terms + i)->term[j])) == 0) { // increment j until you find a space
+        while ((!isspace((*terms + i)->term[j]))) { // increment j until you find a space
             j++;
         }
 
-        int weight_fin = j - 1; // the place where info about the weight is done
+        int weight_len = j - start;
+        // int weight_fin = j - 1; // the place where info about the weight is done
         int term_init = j + 1; // the place where the info about the term itself starts
-        int term_fin = strlen((*terms + i)->term) - 2; // accounts for the character exclusion + null character
+        // int term_fin = strlen((*terms + i)->term) - 2; // accounts for the character exclusion + null character
+        int term_len = strlen((*terms + i)->term) - term_init - 1; // exclude the newline
 
         // put all the info about weight into the weight property of the struct
-        strncpy(weight,(*terms + i)->term+start, weight_fin);
+        strncpy(weight,(*terms + i)->term+start, weight_len);
+        weight[weight_len] = '\0'; // null - terminate the string
         (*terms + i)->weight = (double)atoll(weight); // converts the weight from a string to a type long long int
 
         // put all the info about the term into the term propety of the struct
-        strncpy(term, (*terms + i)->term+term_init, term_fin);
+        strncpy(term, (*terms + i)->term+term_init, term_len);
+        term[term_len] = '\0'; // null - terminate the string
         strcpy((*terms + i)->term, term);
         int len = strlen((*terms + i)->term); // get the length of the term 
 
@@ -159,7 +165,7 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
     int lowest = lowest_match(terms, nterms, substr);
     int highest = highest_match(terms, nterms, substr);
 
-    int na_answer = highest - lowest + 1;
+    *n_answer = highest - lowest + 1;
 
     *answer = (term *)malloc(sizeof(term) * (*n_answer));
 
@@ -167,7 +173,7 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
         (*answer)[i - lowest] = terms[i];
     }
 
-    qsort(answer, na_answer, sizeof(term), compweights);
+    qsort(*answer, *n_answer, sizeof(term), compweights);
     
 
 }
