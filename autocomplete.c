@@ -4,21 +4,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-int main(void)
-{
-    struct term terms = {"Tooor", 12020};
-    int nterms = 10;
-    // read_in_terms(&terms, &nterms, "cities.txt");
-    // lowest_match(terms, nterms, "Tor");
-    struct term *termss = &terms;
-    highest_match(termss, nterms, "Tor");
-    
-    // struct term *answer;
-    // int n_answer;
-    // autocomplete(&answer, &n_answer, terms, nterms, "Tor");
-    //free allocated blocks here -- not required for the project, but good practice
-    return 0;
-}
 
 // The comparator function should only return the following values:
 // Less than zero (<0): If the first argument should be placed before the second argument.
@@ -124,4 +109,20 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
     qsort(answer, na_answer, sizeof(term), compweights);
     
 
+}
+
+int main(void)
+{
+    struct term *terms;
+    int nterms;
+    read_in_terms(&terms, &nterms, "cities.txt");
+    lowest_match(terms, nterms, "Tor");
+    highest_match(terms, nterms, "Tor");
+    
+    struct term *answer;
+    int n_answer;
+    autocomplete(&answer, &n_answer, terms, nterms, "Tor");
+    //free allocated blocks here -- not required for the project, but good practice
+    
+    return 0;
 }
