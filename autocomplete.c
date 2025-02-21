@@ -75,15 +75,23 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
 
 int lowest_match(term *terms, int nterms, char *substr) {
     // binary search
+
     // lowest match of the index in terms of the first term in lexicographic ordering that matches the string substr 
     int low = 0; 
     int high = nterms-1; 
 
+    printf("low %d high %d\n", low, high);
     while(low <= high) {
         int mid = low + (high - low) /2; 
+        printf("mid %d\n", mid);
         //compare terms to see if they are equal
         //check if in the middle 
-    
+        printf("%s %s\n", terms[mid].term, substr);
+        printf("%d comp\n", comp(terms[mid].term, substr));
+
+        // if (comp(terms[mid].term, substr) == 0 ) {
+        //     return mid; 
+        // }
         if (comp(terms[mid].term, substr) > 0) {
             high = mid - 1;
             if (strstr(terms[mid].term, substr) != NULL) {
@@ -99,23 +107,29 @@ int lowest_match(term *terms, int nterms, char *substr) {
 }
 
 
+
 int highest_match(struct term *terms, int nterms, char *substr) {  
+  // binary search
   // binary search
     int low = 0;
     int high = nterms - 1;
     int mid;
     int val;
 
-    int len_substr = length(substr);
+    // int len_substr = strlen(substr);
+    int highest = -1;
 
     while (low <= high) {
         // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
         mid = (low + high) / 2;
-        val = strcmp((terms)[mid].term, substr);
-        if (val <= 0) {
+        val = strncmp(terms[mid].term, substr, strlen(substr));
+        if (val < 0) {
             low = mid + 1;
         } else if (val > 0) {
             high = mid - 1;
+        } else {
+            highest = mid;
+            low = mid + 1;
         }
 
         // if (comp(terms[low].term, substr) < 0) {
@@ -127,9 +141,7 @@ int highest_match(struct term *terms, int nterms, char *substr) {
         // }
     }
 
-    return high;
-
-    // return -1; // term doesnt exist in terms
+    return highest;
 }
 int compweights(const void *a, const void *b) {
     term *term_a = (term *)a;
