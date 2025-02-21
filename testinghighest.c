@@ -54,7 +54,7 @@ int highest_match(struct term *terms, int nterms, char *substr) {
     while (low <= high) {
         // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
         mid = (low + high) / 2;
-        val = comp((terms)[mid].term, substr, len_substr);
+        val = strcmp((terms)[mid].term, substr);
         if (val > 0) {
             high = mid - 1;
         } else if (val <= 0) {
