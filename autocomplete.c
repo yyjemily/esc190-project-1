@@ -28,7 +28,7 @@ int main(void)
 int comp(const void *a, const void *b, int len_substr) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return strcmp(term_a->term, term_b->term, len_substr);
+    return strncmp(term_a->term, term_b->term, len_substr);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
