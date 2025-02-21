@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <ctype.h>
 
 // The comparator function should only return the following values:
 // Less than zero (<0): If the first argument should be placed before the second argument.
@@ -13,16 +13,54 @@
 int comp(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return strcmp(term_a->term, term_b->term);
+    return strncmp(term_a->term, term_b->term, 200);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {
-    *terms = (term *)malloc(sizeof(term) * (*pnterms));
-
+    *terms = (struct term *)malloc(sizeof(struct term) * (*pnterms));
+    char cur_line[200];
+    
     FILE *fp = fopen(filename, "r");
 
+    fgets(cur_line, sizeof(cur_line), fp);
+
+    *pnterms = atoi(cur_line); // converts string to int
+    int j = 0;
+
     for (int i = 0; i < *pnterms; i++) {
-        fgets((*terms + i)->term, 200, fp);
+        fgets(cur_line, sizeof(cur_line), fp);
+        strcpy((*terms + i)->term, cur_line);
+        while ((isspace((*terms + i)->term[j])) != 0) { // use the isspace function from c library as a helper function here, included #include <ctype.h>
+            j++; // increment until you reach a space
+        }
+        
+        char weight[200];
+        char term[200];
+        int start = j;
+
+        while ((isspace((*terms + i)->term[j])) == 0) { // increment j until you find a space
+            j++;
+        }
+
+        int weight_fin = j - 1; // the place where info about the weight is done
+        int term_init = j + 1; // the place where the info about the term itself starts
+        int term_fin = strlen((*terms + i)->term) - 2; // accounts for the character exclusion + null character
+
+        // put all the info about weight into the weight property of the struct
+        strncpy(weight,(*terms + i)->term+start, weight_fin);
+        (*terms + i)->weight = (double)atoll(weight); // converts the weight from a string to a type long long int
+
+        // put all the info about the term into the term propety of the struct
+        strncpy(term, (*terms + i)->term+term_init, term_fin);
+        strcpy((*terms + i)->term, term);
+        int len = strlen((*terms + i)->term); // get the length of the term 
+
+        // AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH
+
+        // replace all the new lines with a null character
+        if ((*terms + i)->term[len - 1] == '\n') {   
+            (*terms + i)->term[len - 1] = '\0';
+        }
     }
 
     // sorting by lex algo:
