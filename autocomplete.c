@@ -60,30 +60,43 @@ int lowest_match(term *terms, int nterms, char *substr) {
     
 }
 
-/*
-// FIXEDDD (?)
-int highest_match(struct term *terms, int nterms, char *substr) {
-    // binary search
+int highest_match(struct term *terms, int nterms, char *substr) {  
+  // binary search
     int low = 0;
     int high = nterms - 1;
-    int mid; 
+    int mid;
+    int val;
+
 
     int len_substr = length(substr);
 
+
     while (low <= high) {
         // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
-        mid = (low + high) /2; 
-        val = (terms)[mid].term, substr, len_substr;
+        mid = (low + high) / 2;
+        val = strcmp((terms)[mid].term, substr);
         if (val > 0) {
             high = mid - 1;
         } else if (val <= 0) {
             low = mid + 1;
         }
+
+
+        return high;
+
+
+        // if (comp(terms[low].term, substr) < 0) {
+        //     low = mid + 1;
+        // } else if (comp(terms[mid].term, substr) == 0) {
+        //     return mid;
+        // } else {
+        //     high = mid - 1;
+        // }
     }
 
-    return high;
+
+    return -1; // term doesnt exist in terms
 }
-*/
 int compweights(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
