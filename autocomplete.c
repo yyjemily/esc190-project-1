@@ -37,7 +37,6 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
 
 int lowest_match(term *terms, int nterms, char *substr) {
     // binary search
-
     // lowest match of the index in terms of the first term in lexicographic ordering that matches the string substr 
     int low = 0; 
     int high = nterms-1; 
@@ -46,12 +45,13 @@ int lowest_match(term *terms, int nterms, char *substr) {
         int mid = low + (high - low) /2; 
         //compare terms to see if they are equal
         //check if in the middle 
-        if (comp(terms[low].term, substr, strlen(substr)) == 0 ) {
-            return mid; 
-        }
-        if (comp(terms[low].term, substr, strlen(substr)) < 0) {
+    
+        if (comp(terms[mid].term, substr) > 0) {
             high = mid - 1;
-        } else if (comp(terms[low].term, substr, trlen(substr)) > 0) {
+            if (strstr(terms[mid].term, substr) != NULL) {
+                return mid; 
+            } 
+        } else if (comp(terms[mid].term, substr) < 0) {
             low = mid + 1; 
         }
 
@@ -59,6 +59,7 @@ int lowest_match(term *terms, int nterms, char *substr) {
     return -1; //term does not exist 
     
 }
+
 
 int highest_match(struct term *terms, int nterms, char *substr) {  
   // binary search
