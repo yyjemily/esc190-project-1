@@ -95,7 +95,7 @@ int main() {
     int highest = highest_match(terms, nterms, substr);
 
     if (highest != -1) {
-        printf("Highest match at index %d: \"%s\"\n", substr, highest, terms[highest].term);
+        printf("Highest match at index %s: \"%d\"\n", substr, highest, terms[highest].term);
     } else {
         printf("No match found");
     }
