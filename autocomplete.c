@@ -10,10 +10,10 @@
 // Zero (0): If both arguments are equal.
 // Greater than zero (>0): If the first argument should be placed after the second argument.
 
-int comp(const void *a, const void *b, int len_substr) {
+int comp(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return strncmp(term_a->term, term_b->term, len_substr);
+    return strcmp(term_a->term, term_b->term);
 }
 
 void read_in_terms(term **terms, int *pnterms, char *filename) {

@@ -5,16 +5,42 @@
 #include <stdlib.h>
 
 
-int comp(const void *a, const void *b, int len_substr) {
+int comp(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return strncmp(term_a->term, term_b->term, len_substr);
+    return strcmp(term_a->term, term_b->term);
 }
 
 int compweights(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
     return term_a->weight - term_b->weight;    
+}
+
+
+int lowest_match(term *terms, int nterms, char *substr) {
+    // binary search
+
+    // lowest match of the index in terms of the first term in lexicographic ordering that matches the string substr 
+    int low = 0; 
+    int high = nterms-1; 
+
+    while(low <= high) {
+        int mid = low + (high - low) /2; 
+        //compare terms to see if they are equal
+        //check if in the middle 
+        if (comp(terms[low].term, substr) == 0 ) {
+            return mid; 
+        }
+        if (comp(terms[low].term, substr) < 0) {
+            high = mid - 1;
+        } else if (comp(terms[low].term, substr) > 0) {
+            low = mid + 1; 
+        }
+
+    }
+    return -1; //term does not exist 
+    
 }
 
 int main(void)
