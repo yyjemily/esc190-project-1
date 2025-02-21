@@ -51,41 +51,27 @@ int lowest_match(term *terms, int nterms, char *substr) {
     return -1; //term does not exist 
     
 }
-
 int highest_match(struct term *terms, int nterms, char *substr) {  
-  // binary search
   // binary search
     int low = 0;
     int high = nterms - 1;
     int mid;
     int val;
 
-    int len_substr = strlen(substr);
-    int highest = -1;
-
     while (low <= high) {
         // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
-        mid = (low + high) / 2;
-        val = strncmp(terms[mid].term, substr, strlen(substr));
-        if (val < 0) {
+        mid = low + (high - low) / 2;
+        val = strcmp((terms)[mid].term, substr);
+        if (val <= 0) {
             low = mid + 1;
         } else if (val > 0) {
             high = mid - 1;
-        } else {
-            highest = mid;
-            low = mid + 1;
         }
 
-        // if (comp(terms[low].term, substr) < 0) {
-        //     low = mid + 1;
-        // } else if (comp(terms[mid].term, substr) == 0) {
-        //     return mid;
-        // } else {
-        //     high = mid - 1;
-        // }
     }
+    return high;
 
-    return highest;
+    // return -1; // term doesnt exist in terms
 }
 int main(void)
 {
@@ -112,7 +98,6 @@ int main(void)
 
     // Dynamically allocate memory for the terms array
  
-    
     qsort(terms, 13, sizeof(term), comp); 
     for (int i = 0; i< 13; i++) {
         printf("City: %s, Population: %.0f\n", terms[i].term, terms[i].weight);
