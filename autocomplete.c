@@ -157,7 +157,13 @@ int highest_match(struct term *terms, int nterms, char *substr) {
 int compweights(const void *a, const void *b) {
     term *term_a = (term *)a;
     term *term_b = (term *)b;
-    return term_a->weight - term_b->weight;    
+    if (term_a->weight > term_b->weight) {
+        return -1; // higher weights get returned first
+    } else if (term_a->weight < term_b->weight) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 
@@ -169,6 +175,13 @@ void autocomplete(term **answer, int *n_answer, term *terms, int nterms, char *s
 
     int lowest = lowest_match(terms, nterms, substr);
     int highest = highest_match(terms, nterms, substr);
+
+    // check for no matches
+    if ((lowest == -1) || (highest == -1) || (lowest > highest)) {
+        *n_answer = 0;
+        *answer = NULL;
+        return;
+    }
 
     *n_answer = highest - lowest + 1;
 
