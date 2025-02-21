@@ -67,23 +67,17 @@ int highest_match(struct term *terms, int nterms, char *substr) {
     int mid;
     int val;
 
-
     int len_substr = length(substr);
-
 
     while (low <= high) {
         // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
         mid = (low + high) / 2;
         val = strcmp((terms)[mid].term, substr);
-        if (val > 0) {
-            high = mid - 1;
-        } else if (val <= 0) {
+        if (val <= 0) {
             low = mid + 1;
+        } else if (val > 0) {
+            high = mid - 1;
         }
-
-
-        return high;
-
 
         // if (comp(terms[low].term, substr) < 0) {
         //     low = mid + 1;
@@ -94,8 +88,9 @@ int highest_match(struct term *terms, int nterms, char *substr) {
         // }
     }
 
+    return high;
 
-    return -1; // term doesnt exist in terms
+    // return -1; // term doesnt exist in terms
 }
 int compweights(const void *a, const void *b) {
     term *term_a = (term *)a;
