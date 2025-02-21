@@ -1,7 +1,7 @@
-// #include <stdbool.h>
-// #include <stdio.h>
-// #include <string.h>
-// #include <stdlib.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 // int main() {
 //   struct term *terms;
@@ -44,24 +44,27 @@ typedef struct term{
 
 int highest_match(struct term *terms, int nterms, char *substr) {  
   // binary search
+  // binary search
     int low = 0;
     int high = nterms - 1;
-    int mid; 
+    int mid;
     int val;
 
-    int len_substr = length(substr);
+    int len_substr = strlen(substr);
+    int highest = -1;
 
     while (low <= high) {
         // printf("current vals: low: %d, mid: %d, high %d", low, mid, high);
         mid = (low + high) / 2;
-        val = strcmp((terms)[mid].term, substr);
-        if (val > 0) {
+        val = strncmp(terms[mid].term, substr, strlen(substr));
+        if (val < 0) {
+            low = mid + 1;
+        } else if (val > 0) {
             high = mid - 1;
-        } else if (val <= 0) {
+        } else {
+            highest = mid;
             low = mid + 1;
         }
-
-        return high;
 
         // if (comp(terms[low].term, substr) < 0) {
         //     low = mid + 1;
@@ -72,5 +75,30 @@ int highest_match(struct term *terms, int nterms, char *substr) {
         // }
     }
 
-    return -1; // term doesnt exist in terms
+    return highest;
+}
+
+int main() {
+    // Test data: sorted lexicographically
+    term terms[] = {
+        {"Tor", 12020},
+        {"Torino", 15000},
+        {"Toronto", 20000},
+        {"Torrance", 18000},
+        {"Torrrrrrrrrrrrrrrr", 16000},
+        {"Van", 25000}
+    };
+
+    int nterms = sizeof(terms) / sizeof(terms[0]);
+    char substr[] = "Tor";
+
+    int highest = highest_match(terms, nterms, substr);
+
+    if (highest != -1) {
+        printf("Highest match at index %d: \"%s\"\n", substr, highest, terms[highest].term);
+    } else {
+        printf("No match found");
+    }
+
+    return 0;
 }
