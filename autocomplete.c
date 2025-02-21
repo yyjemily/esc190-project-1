@@ -85,30 +85,35 @@ int lowest_match(term *terms, int nterms, char *substr) {
     // lowest match of the index in terms of the first term in lexicographic ordering that matches the string substr 
     int low = 0; 
     int high = nterms-1; 
+    int lowest = -1;
+    int val;
 
-    printf("low %d high %d\n", low, high);
+    // printf("low %d high %d\n", low, high);
     while(low <= high) {
         int mid = low + (high - low) /2; 
-        printf("mid %d\n", mid);
+        // printf("mid %d\n", mid);
         //compare terms to see if they are equal
         //check if in the middle 
-        printf("%s %s\n", terms[mid].term, substr);
-        printf("%d comp\n", comp(terms[mid].term, substr));
+        // printf("%s %s\n", terms[mid].term, substr);
+        // printf("%d comp\n", comp(terms[mid].term, substr));
 
         // if (comp(terms[mid].term, substr) == 0 ) {
         //     return mid; 
         // }
-        if (comp(terms[mid].term, substr) > 0) {
+
+        val = strncmp(terms[mid].term, substr, strlen(substr));
+
+        if (val == 0) {
+            lowest = mid;
             high = mid - 1;
-            if (strstr(terms[mid].term, substr) != NULL) {
-                return mid; 
-            } 
-        } else if (comp(terms[mid].term, substr) < 0) {
+        } else if (val < 0) {
             low = mid + 1; 
+        } else {
+            high = mid - 1;
         }
 
     }
-    return -1; //term does not exist 
+    return lowest; //term does not exist 
     
 }
 
