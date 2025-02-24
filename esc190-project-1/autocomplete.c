@@ -73,8 +73,9 @@ void read_in_terms(term **terms, int *pnterms, char *filename) {
 
     // int sorted = 0 // false
     // char *temp;
-    
+    //passes in a comparing function, programmer decides how it compare 
     qsort(*terms, *pnterms, sizeof(term), comp);
+    //assumes the function
 
     fclose(fp);
 }

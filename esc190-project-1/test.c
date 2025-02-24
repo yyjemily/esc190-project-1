@@ -35,19 +35,22 @@ int lowest_match(term *terms, int nterms, char *substr) {
         printf("%s %s\n", terms[mid].term, substr);
         printf("%d comp\n", comp(terms[mid].term, substr));
 
+        
+        int val = comp(terms[mid].term, substr);
         // if (comp(terms[mid].term, substr) == 0 ) {
         //     return mid; 
         // }
-        if (comp(terms[mid].term, substr) > 0) {
+        if (val > 0) {
             high = mid - 1;
             if (strstr(terms[mid].term, substr) != NULL) {
-                return mid; 
+                high = mid - 1;
             } 
-        } else if (comp(terms[mid].term, substr) < 0) {
+        } else if (val < 0) {
             low = mid + 1; 
         }
 
     }
+
     return -1; //term does not exist 
     
 }
@@ -102,8 +105,8 @@ int main(void)
     for (int i = 0; i< 13; i++) {
         printf("City: %s, Population: %.0f\n", terms[i].term, terms[i].weight);
     }
-    //printf("%d", lowest_match(terms, 13, "Shan")); 
-    printf("%d", highest_match(terms, 14, "Shan")); 
+    printf("%d", lowest_match(terms, 14, "Shan")); 
+    //printf("%d", highest_match(terms, 14, "Shan")); 
     
     //lowest_match(terms, nterms, "Tor");
     //highest_match(terms, nterms, "Tor");
