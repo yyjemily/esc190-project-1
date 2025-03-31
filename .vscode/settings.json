@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "string.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "__locale": "c",
+        "ostream": "c",
+        "print": "c",
+        "array": "c"
     }
 }
