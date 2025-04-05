@@ -5,6 +5,9 @@
         "__locale": "c",
         "ostream": "c",
         "print": "c",
-        "array": "c"
+        "array": "c",
+        "math.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c"
     }
 }
