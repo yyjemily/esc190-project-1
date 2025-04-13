@@ -15,8 +15,6 @@ class Graph:
 
 #adjacency list 
 
-
-
 class graph2: 
     def __init__(self, num_nodes):
         self.nodes = []
